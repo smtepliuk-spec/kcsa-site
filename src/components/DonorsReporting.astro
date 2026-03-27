@@ -1,0 +1,56 @@
+---
+import { t, type Lang } from '../i18n/translations';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+---
+
+<section class="bg-ivory border-b border-charcoal/10">
+  <div class="max-w-7xl mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-2">
+      <!-- Donors -->
+      <div class="p-8 sm:p-12 md:border-r border-charcoal/10">
+        <span class="font-mono text-xs uppercase tracking-[0.12em] text-gold font-semibold">{t(lang, 'donors.label')}</span>
+        <h2 class="font-heading text-2xl font-bold text-navy mt-1 mb-6">{t(lang, 'donors.title')}</h2>
+        <div class="grid grid-cols-3 gap-3">
+          {[1, 2, 3, 4, 5, 6].map(() => (
+            <div class="bg-white rounded-lg h-14 flex items-center justify-center text-charcoal/20 text-xs border border-charcoal/10">
+              Logo
+            </div>
+          ))}
+        </div>
+        <p class="text-xs text-charcoal/40 mt-4 italic">{t(lang, 'donors.placeholder')}</p>
+      </div>
+
+      <!-- Reporting -->
+      <div class="p-8 sm:p-12">
+        <span class="font-mono text-xs uppercase tracking-[0.12em] text-gold font-semibold">{t(lang, 'reporting.label')}</span>
+        <h2 class="font-heading text-2xl font-bold text-navy mt-1 mb-6">{t(lang, 'reporting.title')}</h2>
+        <div class="space-y-3">
+          <div class="bg-white rounded-lg p-4 flex items-center gap-3 border border-charcoal/10">
+            <span class="text-xl">&#128196;</span>
+            <div>
+              <div class="text-sm font-semibold text-navy">
+                {lang === 'ua' ? 'Річний звіт 2025' : 'Annual Report 2025'}
+              </div>
+              <div class="text-xs text-charcoal/50">PDF &middot; {t(lang, 'reporting.available_soon')}</div>
+            </div>
+          </div>
+          <div class="bg-white rounded-lg p-4 flex items-center gap-3 border border-charcoal/10">
+            <span class="text-xl">&#128196;</span>
+            <div>
+              <div class="text-sm font-semibold text-navy">
+                {lang === 'ua' ? 'Фінансова звітність' : 'Financial Report'}
+              </div>
+              <div class="text-xs text-charcoal/50">PDF &middot; {t(lang, 'reporting.available_soon')}</div>
+            </div>
+          </div>
+        </div>
+        <p class="text-xs text-charcoal/40 mt-4 italic">{t(lang, 'reporting.placeholder')}</p>
+      </div>
+    </div>
+  </div>
+</section>

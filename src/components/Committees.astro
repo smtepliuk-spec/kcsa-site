@@ -1,0 +1,32 @@
+---
+import { t, localePath, type Lang } from '../i18n/translations';
+import { getCollection } from 'astro:content';
+import SectionHeader from './SectionHeader.astro';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const committees = (await getCollection('committees')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<section class="bg-ivory py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <SectionHeader label={t(lang, 'committees.label')} title={t(lang, 'committees.title')} align="center" />
+
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mt-10">
+      {committees.map((c) => (
+        <a
+          href={localePath(lang, `/committees/${c.id}`)}
+          class="bg-white rounded-lg p-5 text-center border border-charcoal/10 hover:shadow-md hover:border-gold/30 transition-all group"
+        >
+          <div class="text-3xl mb-3">{c.data.icon}</div>
+          <div class="text-sm font-semibold text-navy group-hover:text-steel transition-colors">
+            {lang === 'ua' ? c.data.name_ua : c.data.name_en}
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>

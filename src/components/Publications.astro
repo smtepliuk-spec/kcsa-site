@@ -1,0 +1,63 @@
+---
+import { t, localePath, type Lang } from '../i18n/translations';
+import { getCollection } from 'astro:content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const publications = (await getCollection('publications'))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 3);
+
+const typeColors: Record<string, string> = {
+  'policy-brief': 'bg-navy',
+  'report': 'bg-steel',
+  'analysis': 'bg-navy',
+};
+
+function typeLabel(type: string): string {
+  const key = `publications.${type.replace('-', '_')}` as any;
+  return t(lang, key);
+}
+---
+
+<section class="bg-white py-16 border-b border-charcoal/10">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="flex justify-between items-end mb-8">
+      <div>
+        <span class="font-mono text-xs uppercase tracking-[0.12em] text-gold font-semibold">
+          {t(lang, 'publications.label')}
+        </span>
+        <h2 class="font-heading text-2xl md:text-3xl font-bold text-navy mt-1">
+          {t(lang, 'publications.title')}
+        </h2>
+      </div>
+      <a href={localePath(lang, '/publications')} class="text-sm text-steel hover:text-navy transition-colors">
+        {t(lang, 'publications.archive')} &rarr;
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+      {publications.map((pub) => (
+        <article class="border border-charcoal/10 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+          <div class={`${typeColors[pub.data.type]} h-20 flex items-center justify-center`}>
+            <span class="font-mono text-[0.7rem] font-semibold text-gold uppercase tracking-wider">
+              {typeLabel(pub.data.type)}
+            </span>
+          </div>
+          <div class="p-5">
+            <h3 class="text-sm font-semibold text-navy leading-snug">
+              {lang === 'ua' ? pub.data.title_ua : pub.data.title_en}
+            </h3>
+            <p class="text-xs text-charcoal/50 mt-2">
+              {pub.data.date.toLocaleDateString(lang === 'ua' ? 'uk-UA' : 'en-GB', { month: 'long', year: 'numeric' })}
+               &middot; {pub.data.author}
+            </p>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
