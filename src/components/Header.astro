@@ -41,13 +41,13 @@ const navItems = [
 
   <!-- Main nav -->
   <nav class="bg-navy/95 backdrop-blur-md border-b border-white/10">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex justify-between items-center h-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex justify-between items-center h-20">
       <!-- Logo -->
-      <a href={localePath(lang, '/')} class="flex items-center gap-3">
-        <img src="/logo-nobg.png" alt="KCSA" class="h-10 w-10 object-contain" />
+      <a href={localePath(lang, '/')} class="flex items-center gap-4">
+        <img src="/logo-nobg.png" alt="KCSA" class="h-14 w-14 object-contain" />
         <div>
-          <div class="font-heading text-white font-bold text-lg tracking-wide">KCSA</div>
-          <div class="text-white/50 text-[0.65rem] hidden sm:block">
+          <div class="font-heading text-white font-bold text-2xl tracking-[0.12em]">KCSA</div>
+          <div class="font-heading text-white/50 text-[0.55rem] uppercase tracking-[0.2em] hidden sm:block">
             {lang === 'ua' ? 'Київська Рада зі Стратегічних Питань' : 'Kyiv Council on Strategic Affairs'}
           </div>
         </div>
@@ -137,7 +137,7 @@ const navItems = [
 </header>
 
 <!-- Spacer for fixed header -->
-<div class="h-[88px] lg:h-[92px]"></div>
+<div class="h-[92px] lg:h-[104px]"></div>
 
 <script>
   const header = document.getElementById('site-header');
