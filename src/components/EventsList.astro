@@ -1,0 +1,52 @@
+---
+import { t, localePath, type Lang } from '../i18n/translations';
+import { getCollection } from 'astro:content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const events = (await getCollection('events'))
+  .filter((e) => e.data.date >= new Date())
+  .sort((a, b) => a.data.date.getTime() - b.data.date.getTime())
+  .slice(0, 4);
+
+const monthsUa = ['СІЧ', 'ЛЮТ', 'БЕР', 'КВТ', 'ТРВ', 'ЧРВ', 'ЛИП', 'СРП', 'ВРС', 'ЖВТ', 'ЛИС', 'ГРУ'];
+const monthsEn = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+---
+
+<div>
+  <div class="flex justify-between items-end mb-4">
+    <h2 class="font-heading text-2xl font-bold text-navy">{t(lang, 'events.title')}</h2>
+    <a href={localePath(lang, '/events')} class="text-sm text-steel hover:text-navy transition-colors">
+      {t(lang, 'events.all')} &rarr;
+    </a>
+  </div>
+
+  <div class="space-y-3">
+    {events.map((event) => {
+      const day = event.data.date.getDate();
+      const monthIdx = event.data.date.getMonth();
+      const month = lang === 'ua' ? monthsUa[monthIdx] : monthsEn[monthIdx];
+      const borderColor = event.data.featured ? 'border-l-gold' : 'border-l-steel';
+
+      return (
+        <div class={`flex gap-4 items-start p-3 bg-ivory rounded-lg border-l-[3px] ${borderColor}`}>
+          <div class="text-center min-w-[40px]">
+            <div class="text-xl font-bold text-navy">{day}</div>
+            <div class="text-[0.65rem] text-charcoal/50 font-mono">{month}</div>
+          </div>
+          <div>
+            <div class="text-sm font-semibold text-navy">
+              {lang === 'ua' ? event.data.title_ua : event.data.title_en}
+            </div>
+            <div class="text-xs text-charcoal/50 mt-0.5">
+              {event.data.location} {event.data.time ? `\u00B7 ${event.data.time}` : ''}
+            </div>
+          </div>
+        </div>
+      );
+    })}
+  </div>
+</div>

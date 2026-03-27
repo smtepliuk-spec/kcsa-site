@@ -1,0 +1,86 @@
+---
+import { t, type Lang } from '../i18n/translations';
+import { getCollection } from 'astro:content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const news = (await getCollection('news'))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 5);
+---
+
+<div>
+  <h2 class="font-heading text-2xl font-bold text-navy mb-4">{t(lang, 'news.title')}</h2>
+
+  <div id="news-slider" class="relative overflow-hidden rounded-xl">
+    {news.map((item, i) => (
+      <div
+        class:list={['news-slide bg-navy rounded-xl p-6 sm:p-8 text-white min-h-[200px] flex flex-col justify-end transition-opacity duration-500', { 'hidden': i !== 0 }]}
+        data-index={i}
+      >
+        <span class="font-mono text-[0.65rem] uppercase tracking-[0.1em] text-gold">
+          {lang === 'ua' ? item.data.category_ua : item.data.category_en}
+           &middot; {item.data.date.toLocaleDateString(lang === 'ua' ? 'uk-UA' : 'en-GB', { month: 'long', year: 'numeric' })}
+        </span>
+        <h3 class="font-heading text-lg sm:text-xl font-semibold mt-2 leading-snug">
+          {lang === 'ua' ? item.data.title_ua : item.data.title_en}
+        </h3>
+        <p class="text-sm text-white/60 mt-2">{item.body?.slice(0, 100)}</p>
+      </div>
+    ))}
+
+    <!-- Dots -->
+    <div class="flex gap-1.5 mt-4">
+      {news.map((_, i) => (
+        <button
+          class:list={['news-dot w-6 h-[3px] rounded-full transition-colors', i === 0 ? 'bg-gold' : 'bg-charcoal/20']}
+          data-index={i}
+          aria-label={`Slide ${i + 1}`}
+        />
+      ))}
+    </div>
+  </div>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.news-slide') as NodeListOf<HTMLElement>;
+  const dots = document.querySelectorAll('.news-dot') as NodeListOf<HTMLElement>;
+  let current = 0;
+  let timer: ReturnType<typeof setInterval>;
+
+  function showSlide(index: number) {
+    slides.forEach((s, i) => {
+      s.classList.toggle('hidden', i !== index);
+    });
+    dots.forEach((d, i) => {
+      d.classList.toggle('bg-gold', i === index);
+      d.classList.toggle('bg-charcoal/20', i !== index);
+    });
+    current = index;
+  }
+
+  function nextSlide() {
+    showSlide((current + 1) % slides.length);
+  }
+
+  function startTimer() {
+    timer = setInterval(nextSlide, 4000);
+  }
+
+  dots.forEach((dot) => {
+    dot.addEventListener('click', () => {
+      clearInterval(timer);
+      showSlide(parseInt(dot.dataset.index || '0'));
+      startTimer();
+    });
+  });
+
+  const slider = document.getElementById('news-slider');
+  slider?.addEventListener('mouseenter', () => clearInterval(timer));
+  slider?.addEventListener('mouseleave', startTimer);
+
+  startTimer();
+</script>
