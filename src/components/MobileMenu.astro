@@ -1,0 +1,86 @@
+---
+import { t, localePath, type Lang } from '../i18n/translations';
+import { getCollection } from 'astro:content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const committees = (await getCollection('committees')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<div id="mobile-menu" class="fixed inset-0 z-[60] bg-navy hidden">
+  <div class="flex justify-between items-center p-4 border-b border-white/10">
+    <span class="font-heading text-white font-bold text-xl tracking-wide">KCSA</span>
+    <button id="mobile-menu-close" class="text-white text-3xl" aria-label="Close">&times;</button>
+  </div>
+
+  <nav class="p-6 space-y-4 overflow-y-auto h-[calc(100vh-64px)]">
+    <!-- Structure accordion -->
+    <div class="border-b border-white/10 pb-4">
+      <button class="mobile-accordion-toggle w-full text-left text-white text-lg font-medium flex justify-between items-center">
+        {t(lang, 'nav.structure')}
+        <span class="text-sm transition-transform">&#9662;</span>
+      </button>
+      <div class="mobile-accordion-content hidden mt-3 ml-4 space-y-2 text-white/70 text-sm">
+        <a href={localePath(lang, '/structure')} class="block py-1">{t(lang, 'mega.director')}</a>
+        <a href={localePath(lang, '/structure')} class="block py-1">{t(lang, 'mega.council_members')}</a>
+        <a href={localePath(lang, '/structure#experts')} class="block py-1">{t(lang, 'mega.expert_list')}</a>
+      </div>
+    </div>
+
+    <!-- Committees accordion -->
+    <div class="border-b border-white/10 pb-4">
+      <button class="mobile-accordion-toggle w-full text-left text-white text-lg font-medium flex justify-between items-center">
+        {t(lang, 'nav.committees')}
+        <span class="text-sm transition-transform">&#9662;</span>
+      </button>
+      <div class="mobile-accordion-content hidden mt-3 ml-4 space-y-2 text-white/70 text-sm">
+        {committees.map((c) => (
+          <a href={localePath(lang, `/committees/${c.id}`)} class="block py-1">
+            {c.data.icon} {lang === 'ua' ? c.data.name_ua : c.data.name_en}
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <!-- Simple nav links -->
+    <a href={localePath(lang, '/publications')} class="block text-white text-lg font-medium py-2 border-b border-white/10">{t(lang, 'nav.publications')}</a>
+    <a href={localePath(lang, '/#ukraine-alerts')} class="block text-white text-lg font-medium py-2 border-b border-white/10">{t(lang, 'nav.alerts')}</a>
+    <a href={localePath(lang, '/donors')} class="block text-white text-lg font-medium py-2 border-b border-white/10">{t(lang, 'nav.donors')}</a>
+    <a href={localePath(lang, '/reporting')} class="block text-white text-lg font-medium py-2 border-b border-white/10">{t(lang, 'nav.reporting')}</a>
+    <a href={localePath(lang, '/events')} class="block text-white text-lg font-medium py-2 border-b border-white/10">{t(lang, 'nav.events')}</a>
+
+    <!-- CTA -->
+    <a
+      href={localePath(lang, '/contact')}
+      class="block bg-gold text-navy text-center text-lg font-semibold py-3 rounded-md mt-6"
+    >
+      {t(lang, 'nav.contact')}
+    </a>
+  </nav>
+</div>
+
+<script>
+  const toggle = document.getElementById('mobile-menu-toggle');
+  const close = document.getElementById('mobile-menu-close');
+  const menu = document.getElementById('mobile-menu');
+
+  toggle?.addEventListener('click', () => menu?.classList.remove('hidden'));
+  close?.addEventListener('click', () => menu?.classList.add('hidden'));
+
+  document.querySelectorAll('.mobile-accordion-toggle').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const content = btn.nextElementSibling as HTMLElement;
+      const arrow = btn.querySelector('span');
+      content?.classList.toggle('hidden');
+      arrow?.classList.toggle('rotate-180');
+    });
+  });
+
+  // Close menu on link click
+  menu?.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', () => menu?.classList.add('hidden'));
+  });
+</script>

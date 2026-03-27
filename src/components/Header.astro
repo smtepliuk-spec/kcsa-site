@@ -1,0 +1,157 @@
+---
+import { t, localePath, switchLangPath, type Lang } from '../i18n/translations';
+import { getCollection } from 'astro:content';
+
+interface Props {
+  lang: Lang;
+  currentPath: string;
+}
+
+const { lang, currentPath } = Astro.props;
+const otherLang = lang === 'ua' ? 'en' : 'ua';
+const committees = (await getCollection('committees')).sort((a, b) => a.data.order - b.data.order);
+
+const navItems = [
+  { key: 'nav.publications' as const, href: localePath(lang, '/publications') },
+  { key: 'nav.alerts' as const, href: localePath(lang, '/#ukraine-alerts') },
+  { key: 'nav.donors' as const, href: localePath(lang, '/donors') },
+  { key: 'nav.reporting' as const, href: localePath(lang, '/reporting') },
+  { key: 'nav.events' as const, href: localePath(lang, '/events') },
+];
+---
+
+<header id="site-header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+  <!-- Top utility bar -->
+  <div class="bg-navy-dark">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex justify-between items-center py-1.5 text-xs text-white/60">
+      <span>{t(lang, 'common.location')}</span>
+      <div class="flex gap-3 items-center">
+        <a
+          href={switchLangPath(currentPath, 'ua')}
+          class:list={['hover:text-white transition-colors', { 'text-white font-medium': lang === 'ua' }]}
+        >UA</a>
+        <span class="opacity-40">|</span>
+        <a
+          href={switchLangPath(currentPath, 'en')}
+          class:list={['hover:text-white transition-colors', { 'text-white font-medium': lang === 'en' }]}
+        >EN</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main nav -->
+  <nav class="bg-navy/95 backdrop-blur-md border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex justify-between items-center h-16">
+      <!-- Logo -->
+      <a href={localePath(lang, '/')} class="flex items-center gap-3">
+        <img src="/logo-nobg.png" alt="KCSA" class="h-10 w-10 object-contain" />
+        <div>
+          <div class="font-heading text-white font-bold text-lg tracking-wide">KCSA</div>
+          <div class="text-white/50 text-[0.65rem] hidden sm:block">
+            {lang === 'ua' ? 'Київська Рада зі Стратегічних Питань' : 'Kyiv Council on Strategic Affairs'}
+          </div>
+        </div>
+      </a>
+
+      <!-- Desktop nav -->
+      <div class="hidden lg:flex items-center gap-5 text-sm text-white/85">
+        <!-- Structure dropdown -->
+        <div class="relative group">
+          <button class="flex items-center gap-1 hover:text-white transition-colors py-4">
+            {t(lang, 'nav.structure')} <span class="text-xs">&#9662;</span>
+          </button>
+          <div class="absolute top-full left-0 mt-0 w-[600px] bg-white text-charcoal rounded-b-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 border-t-2 border-gold">
+            <div class="grid grid-cols-3 gap-6 p-6">
+              <div>
+                <div class="font-mono text-[0.65rem] uppercase tracking-widest text-gold font-semibold mb-2">{t(lang, 'mega.leadership')}</div>
+                <div class="space-y-1.5 text-sm text-charcoal/70">
+                  <a href={localePath(lang, '/structure')} class="block hover:text-navy transition-colors">{t(lang, 'mega.director')}</a>
+                  <a href={localePath(lang, '/structure')} class="block hover:text-navy transition-colors">{t(lang, 'mega.chairs')}</a>
+                  <a href={localePath(lang, '/structure')} class="block hover:text-navy transition-colors">{t(lang, 'mega.management')}</a>
+                </div>
+              </div>
+              <div>
+                <div class="font-mono text-[0.65rem] uppercase tracking-widest text-gold font-semibold mb-2">{t(lang, 'mega.council')}</div>
+                <div class="space-y-1.5 text-sm text-charcoal/70">
+                  <a href={localePath(lang, '/structure')} class="block hover:text-navy transition-colors">{t(lang, 'mega.council_members')}</a>
+                  <a href={localePath(lang, '/structure#experts')} class="block hover:text-navy transition-colors">{t(lang, 'mega.expert_list')}</a>
+                </div>
+              </div>
+              <div>
+                <div class="font-mono text-[0.65rem] uppercase tracking-widest text-gold font-semibold mb-2">{t(lang, 'mega.key_pages')}</div>
+                <div class="space-y-1.5 text-sm text-charcoal/70">
+                  <a href={localePath(lang, '/structure')} class="block hover:text-navy transition-colors">{t(lang, 'nav.structure')}</a>
+                  <a href={localePath(lang, '/structure#experts')} class="block hover:text-navy transition-colors">{t(lang, 'mega.expert_list')}</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Committees dropdown -->
+        <div class="relative group">
+          <button class="flex items-center gap-1 hover:text-white transition-colors py-4">
+            {t(lang, 'nav.committees')} <span class="text-xs">&#9662;</span>
+          </button>
+          <div class="absolute top-full left-0 mt-0 w-72 bg-white text-charcoal rounded-b-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 border-t-2 border-gold">
+            <div class="p-4 space-y-1.5">
+              {committees.map((c) => (
+                <a
+                  href={localePath(lang, `/committees/${c.id}`)}
+                  class="block text-sm text-charcoal/70 hover:text-navy transition-colors py-1"
+                >
+                  {c.data.icon} {lang === 'ua' ? c.data.name_ua : c.data.name_en}
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <!-- Regular nav items -->
+        {navItems.map((item) => (
+          <a href={item.href} class="hover:text-white transition-colors">
+            {t(lang, item.key)}
+          </a>
+        ))}
+
+        <!-- CTA -->
+        <a
+          href={localePath(lang, '/contact')}
+          class="bg-gold text-navy px-5 py-2 rounded-md font-semibold hover:bg-gold/90 transition-colors"
+        >
+          {t(lang, 'nav.contact')}
+        </a>
+      </div>
+
+      <!-- Mobile hamburger -->
+      <div class="lg:hidden flex items-center gap-3">
+        <div class="flex gap-2 text-xs text-white/60">
+          <a href={switchLangPath(currentPath, 'ua')} class:list={[{ 'text-white': lang === 'ua' }]}>UA</a>
+          <span>|</span>
+          <a href={switchLangPath(currentPath, 'en')} class:list={[{ 'text-white': lang === 'en' }]}>EN</a>
+        </div>
+        <button id="mobile-menu-toggle" class="text-white text-2xl p-2" aria-label="Menu">&#9776;</button>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<!-- Spacer for fixed header -->
+<div class="h-[88px] lg:h-[92px]"></div>
+
+<script>
+  const header = document.getElementById('site-header');
+  let lastScroll = 0;
+
+  window.addEventListener('scroll', () => {
+    const currentScroll = window.scrollY;
+    if (header) {
+      if (currentScroll > 100) {
+        header.classList.add('shadow-lg');
+      } else {
+        header.classList.remove('shadow-lg');
+      }
+    }
+    lastScroll = currentScroll;
+  });
+</script>
