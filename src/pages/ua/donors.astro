@@ -1,0 +1,27 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import MobileMenu from '../../components/MobileMenu.astro';
+import Footer from '../../components/Footer.astro';
+import SectionHeader from '../../components/SectionHeader.astro';
+import { t } from '../../i18n/translations';
+
+const lang = 'ua' as const;
+---
+
+<BaseLayout title={`${t(lang, 'donors.title')} — KCSA`} lang={lang}>
+  <Header lang={lang} currentPath="/ua/donors" />
+  <MobileMenu lang={lang} />
+
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+    <SectionHeader label={t(lang, 'donors.label')} title={t(lang, 'donors.title')} />
+    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-10">
+      {[1, 2, 3, 4, 5, 6].map(() => (
+        <div class="bg-white rounded-lg h-24 flex items-center justify-center text-charcoal/20 border border-charcoal/10">Logo</div>
+      ))}
+    </div>
+    <p class="text-sm text-charcoal/40 mt-6 italic text-center">{t(lang, 'donors.placeholder')}</p>
+  </main>
+
+  <Footer lang={lang} />
+</BaseLayout>

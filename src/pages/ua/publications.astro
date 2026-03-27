@@ -1,0 +1,50 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import MobileMenu from '../../components/MobileMenu.astro';
+import Footer from '../../components/Footer.astro';
+import SectionHeader from '../../components/SectionHeader.astro';
+import { t } from '../../i18n/translations';
+import { getCollection } from 'astro:content';
+
+const lang = 'ua' as const;
+const publications = (await getCollection('publications')).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const typeLabels: Record<string, string> = {
+  'policy-brief': t(lang, 'publications.policy_brief'),
+  'report': t(lang, 'publications.report'),
+  'analysis': t(lang, 'publications.analysis'),
+};
+const typeColors: Record<string, string> = {
+  'policy-brief': 'bg-navy', 'report': 'bg-steel', 'analysis': 'bg-navy',
+};
+---
+
+<BaseLayout title={`${t(lang, 'publications.title')} — KCSA`} lang={lang}>
+  <Header lang={lang} currentPath="/ua/publications" />
+  <MobileMenu lang={lang} />
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+    <SectionHeader label={t(lang, 'publications.label')} title={t(lang, 'publications.title')} />
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-10">
+      {publications.map((pub) => (
+        <article class="border border-charcoal/10 rounded-lg overflow-hidden hover:shadow-md transition-shadow bg-white">
+          <div class={`${typeColors[pub.data.type]} h-20 flex items-center justify-center`}>
+            <span class="font-mono text-[0.7rem] font-semibold text-gold uppercase tracking-wider">
+              {typeLabels[pub.data.type]}
+            </span>
+          </div>
+          <div class="p-5">
+            <h3 class="text-sm font-semibold text-navy leading-snug">{pub.data.title_ua}</h3>
+            <p class="text-xs text-charcoal/50 mt-2">
+              {pub.data.date.toLocaleDateString('uk-UA', { month: 'long', year: 'numeric' })} · {pub.data.author}
+            </p>
+          </div>
+        </article>
+      ))}
+    </div>
+  </main>
+
+  <Footer lang={lang} />
+</BaseLayout>
