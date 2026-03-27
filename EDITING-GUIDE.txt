@@ -1,0 +1,221 @@
+KCSA Site — Editing Guide
+=========================
+
+Project location: C:\Users\smtep\kcsa-site
+
+
+1. STARTING THE DEV SERVER
+---------------------------
+Open terminal in the kcsa-site folder and run:
+
+    npm run dev
+
+Site opens at: http://localhost:4321/
+Changes appear instantly — just save the file and refresh.
+
+To build for production:
+
+    npm run build
+
+Output goes to the dist/ folder.
+
+
+2. EDITING CONTENT (no code needed)
+-------------------------------------
+All content lives in: src/content/
+
+Each subfolder is a collection:
+
+  src/content/
+    committees/       <- Committee pages (YAML)
+    leadership/       <- Director, chairs (YAML)
+    council/          <- Council members (YAML)
+    experts/          <- Expert list (YAML)
+    events/           <- Events (Markdown)
+    publications/     <- Publications (Markdown)
+    news/             <- News slider items (Markdown)
+    alerts/           <- Ukraine Alerts cards (Markdown)
+
+TO ADD A NEW ITEM: Copy an existing file in the folder, rename it,
+and change the content inside.
+
+TO REMOVE AN ITEM: Delete the file.
+
+TO EDIT AN ITEM: Open the file in any text editor and change the values.
+
+
+3. CONTENT FILE FORMAT
+-----------------------
+YAML files (.yaml) look like this:
+
+    name:
+      ua: "Назва українською"
+      en: "Name in English"
+    description:
+      ua: "Опис"
+      en: "Description"
+
+Markdown files (.md) have a frontmatter block at the top:
+
+    ---
+    title:
+      ua: "Заголовок"
+      en: "Title"
+    date: 2026-03-15
+    type: "policy-brief"
+    ---
+
+    Body text goes here in Markdown format.
+
+IMPORTANT: Keep the --- markers. Don't remove any required fields.
+Look at existing files as examples.
+
+
+4. ADDING A NEW COMMITTEE
+---------------------------
+1. Copy any file in src/content/committees/
+2. Rename it: my-committee.yaml
+3. Edit the fields inside:
+   - name (ua + en)
+   - description (ua + en)
+   - icon (emoji)
+   - slug (URL-friendly name, e.g., "my-committee")
+4. Save. The committee appears automatically on the site.
+
+
+5. ADDING A NEW EVENT
+-----------------------
+1. Copy any file in src/content/events/
+2. Rename it: my-event.md
+3. Edit the frontmatter:
+   - title (ua + en)
+   - date (YYYY-MM-DD format)
+   - location (ua + en)
+   - type: "panel" or "summit" or "conference"
+   - featured: true/false
+4. Save.
+
+
+6. ADDING A NEW PUBLICATION
+-----------------------------
+1. Copy any file in src/content/publications/
+2. Rename it: my-publication.md
+3. Edit the frontmatter:
+   - title (ua + en)
+   - author
+   - date
+   - type: "policy-brief" or "report" or "analysis"
+4. Write the body text below the --- markers.
+
+
+7. EDITING UI TEXT (buttons, labels, nav items)
+-------------------------------------------------
+All interface text in both languages is in one file:
+
+    src/i18n/translations.ts
+
+Find the text you want to change, edit both ua and en values.
+Example:
+
+    nav: {
+      structure: { ua: 'Структура', en: 'Structure' },
+      committees: { ua: 'Комітети', en: 'Committees' },
+      ...
+    }
+
+
+8. EDITING PAGE LAYOUT
+------------------------
+Pages are in: src/pages/
+
+    src/pages/
+      index.astro          <- Root redirect
+      ua/index.astro       <- Ukrainian homepage
+      en/index.astro       <- English homepage
+      ua/structure.astro   <- Structure page (UA)
+      en/structure.astro   <- Structure page (EN)
+      ua/committees/       <- Committee pages (UA)
+      en/committees/       <- Committee pages (EN)
+      ...and so on
+
+Each page imports components and passes data to them.
+
+
+9. EDITING COMPONENTS (visual sections)
+-----------------------------------------
+Components are in: src/components/
+
+    Header.astro         <- Top navigation + mega-menu
+    MobileMenu.astro     <- Mobile hamburger menu
+    Hero.astro           <- Big hero banner at top
+    UkraineAlerts.astro  <- Ukraine Alerts cards
+    NewsSlider.astro     <- Sliding news cards
+    EventsList.astro     <- Events list sidebar
+    Committees.astro     <- Committee cards grid
+    Publications.astro   <- Publication cards
+    DonorsReporting.astro <- Donors + Reporting sections
+    ContactSection.astro <- Contact form
+    Footer.astro         <- Site footer
+    SectionHeader.astro  <- Reusable section title
+
+Open any component to edit its HTML and styling.
+
+
+10. CHANGING COLORS
+--------------------
+Colors are defined in: src/styles/global.css
+
+Look for the @theme block:
+
+    --color-navy: #1A365D;
+    --color-gold: #C9A84C;
+    --color-ivory: #F7F5F0;
+    --color-steel: #2D4A7A;
+    --color-charcoal: #1A1A1A;
+
+Change hex values to update colors across the entire site.
+
+
+11. CHANGING FONTS
+-------------------
+Fonts are loaded in: src/layouts/BaseLayout.astro (Google Fonts links)
+Font families are set in: src/styles/global.css (@theme block)
+
+Current fonts:
+  - Cinzel (headings)
+  - Raleway (body text)
+  - JetBrains Mono (labels, dates)
+
+
+12. REPLACING THE LOGO
+------------------------
+Logo files are in: public/
+
+    public/logo.jpg         <- Main logo (with background)
+    public/logo-nobg.png    <- Transparent logo (used in hero watermark)
+    public/favicon.svg      <- Browser tab icon
+
+Replace these files with new versions, keeping the same filenames.
+
+
+13. ADDING DONOR LOGOS
+-----------------------
+Put logo images in: public/donors/
+
+Then edit src/components/DonorsReporting.astro to display them.
+
+
+14. USEFUL COMMANDS
+--------------------
+Start dev server:     npm run dev
+Build for production: npm run build
+Preview build:        npm run preview
+
+
+15. FILE EDITING TIPS
+----------------------
+- Use any text editor (VS Code, Notepad++, or even Notepad)
+- Save files as UTF-8 (important for Ukrainian text)
+- Don't change file extensions (.astro, .yaml, .md, .ts, .css)
+- If something breaks, check the terminal for error messages
+- The dev server shows errors in the browser too

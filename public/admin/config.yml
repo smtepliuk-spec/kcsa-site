@@ -1,0 +1,143 @@
+backend:
+  name: git-gateway
+  branch: main
+
+## For local development, swap comments above and uncomment below:
+# backend:
+#   name: proxy
+#   proxy_url: http://localhost:8081/api/v1
+
+media_folder: "public/uploads"
+public_folder: "/uploads"
+
+locale: "uk"
+
+collections:
+  # ==================
+  # COMMITTEES (YAML)
+  # ==================
+  - name: "committees"
+    label: "Committees / Комітети"
+    folder: "src/content/committees"
+    extension: "yaml"
+    format: "yaml"
+    create: true
+    slug: "{{fields.slug}}"
+    fields:
+      - { label: "Slug (URL)", name: "slug", widget: "string", hint: "URL-friendly name, e.g. economic-cooperation" }
+      - { label: "Name (UA)", name: "name_ua", widget: "string" }
+      - { label: "Name (EN)", name: "name_en", widget: "string" }
+      - { label: "Icon (emoji)", name: "icon", widget: "string" }
+      - { label: "Description (UA)", name: "description_ua", widget: "text" }
+      - { label: "Description (EN)", name: "description_en", widget: "text" }
+      - { label: "Order", name: "order", widget: "number", value_type: "int" }
+
+  # ==================
+  # LEADERSHIP (YAML)
+  # ==================
+  - name: "leadership"
+    label: "Leadership / Керівництво"
+    folder: "src/content/leadership"
+    extension: "yaml"
+    format: "yaml"
+    create: true
+    fields:
+      - { label: "Name (UA)", name: "name_ua", widget: "string" }
+      - { label: "Name (EN)", name: "name_en", widget: "string" }
+      - { label: "Title (UA)", name: "title_ua", widget: "string" }
+      - { label: "Title (EN)", name: "title_en", widget: "string" }
+      - { label: "Bio (UA)", name: "bio_ua", widget: "text" }
+      - { label: "Bio (EN)", name: "bio_en", widget: "text" }
+      - { label: "Photo", name: "photo", widget: "image", required: false }
+      - { label: "Order", name: "order", widget: "number", value_type: "int" }
+
+  # ==================
+  # COUNCIL (YAML)
+  # ==================
+  - name: "council"
+    label: "Council / Рада"
+    folder: "src/content/council"
+    extension: "yaml"
+    format: "yaml"
+    create: true
+    fields:
+      - { label: "Name", name: "name", widget: "string" }
+      - { label: "Affiliation (UA)", name: "affiliation_ua", widget: "string" }
+      - { label: "Affiliation (EN)", name: "affiliation_en", widget: "string" }
+
+  # ==================
+  # EXPERTS (YAML)
+  # ==================
+  - name: "experts"
+    label: "Experts / Експерти"
+    folder: "src/content/experts"
+    extension: "yaml"
+    format: "yaml"
+    create: true
+    fields:
+      - { label: "Name", name: "name", widget: "string" }
+      - { label: "Affiliation (UA)", name: "affiliation_ua", widget: "string" }
+      - { label: "Affiliation (EN)", name: "affiliation_en", widget: "string" }
+      - { label: "Country (UA)", name: "country_ua", widget: "string" }
+      - { label: "Country (EN)", name: "country_en", widget: "string" }
+
+  # ==================
+  # EVENTS (Markdown)
+  # ==================
+  - name: "events"
+    label: "Events / Заходи"
+    folder: "src/content/events"
+    create: true
+    fields:
+      - { label: "Title (UA)", name: "title_ua", widget: "string" }
+      - { label: "Title (EN)", name: "title_en", widget: "string" }
+      - { label: "Date", name: "date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false }
+      - { label: "Location", name: "location", widget: "string" }
+      - { label: "Type", name: "type", widget: "select", options: ["panel", "summit", "conference"] }
+      - { label: "Featured", name: "featured", widget: "boolean", default: false }
+      - { label: "Time", name: "time", widget: "string", required: false }
+      - { label: "Body", name: "body", widget: "markdown" }
+
+  # ==================
+  # PUBLICATIONS (Markdown)
+  # ==================
+  - name: "publications"
+    label: "Publications / Публікації"
+    folder: "src/content/publications"
+    create: true
+    fields:
+      - { label: "Title (UA)", name: "title_ua", widget: "string" }
+      - { label: "Title (EN)", name: "title_en", widget: "string" }
+      - { label: "Type", name: "type", widget: "select", options: ["policy-brief", "report", "analysis"] }
+      - { label: "Author", name: "author", widget: "string" }
+      - { label: "Date", name: "date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false }
+      - { label: "PDF link", name: "pdf", widget: "string", required: false }
+      - { label: "Body", name: "body", widget: "markdown" }
+
+  # ==================
+  # NEWS (Markdown)
+  # ==================
+  - name: "news"
+    label: "News / Новини"
+    folder: "src/content/news"
+    create: true
+    fields:
+      - { label: "Title (UA)", name: "title_ua", widget: "string" }
+      - { label: "Title (EN)", name: "title_en", widget: "string" }
+      - { label: "Date", name: "date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false }
+      - { label: "Category (UA)", name: "category_ua", widget: "string" }
+      - { label: "Category (EN)", name: "category_en", widget: "string" }
+      - { label: "Body", name: "body", widget: "markdown" }
+
+  # ==================
+  # ALERTS (Markdown)
+  # ==================
+  - name: "alerts"
+    label: "Ukraine Alerts"
+    folder: "src/content/alerts"
+    create: true
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Date", name: "date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false }
+      - { label: "Read time (minutes)", name: "readTime", widget: "number", value_type: "int" }
+      - { label: "Body", name: "body", widget: "markdown" }
