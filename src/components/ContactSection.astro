@@ -1,0 +1,85 @@
+---
+import { t, type Lang } from '../i18n/translations';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+---
+
+<section class="bg-white py-16">
+  <div class="max-w-2xl mx-auto px-4 sm:px-6">
+    <div class="text-center mb-10">
+      <span class="font-mono text-xs uppercase tracking-[0.12em] text-gold font-semibold">{t(lang, 'contact.label')}</span>
+      <h2 class="font-heading text-2xl md:text-3xl font-bold text-navy mt-1">{t(lang, 'contact.title')}</h2>
+    </div>
+
+    <form id="contact-form" class="space-y-5">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label for="name" class="block text-sm text-charcoal/60 mb-1">{t(lang, 'contact.name')}</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            required
+            placeholder={t(lang, 'contact.name_placeholder')}
+            class="w-full bg-ivory border border-charcoal/10 rounded-md px-4 py-3 text-sm focus:outline-none focus:border-gold transition-colors"
+          />
+        </div>
+        <div>
+          <label for="email" class="block text-sm text-charcoal/60 mb-1">{t(lang, 'contact.email')}</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            placeholder={t(lang, 'contact.email_placeholder')}
+            class="w-full bg-ivory border border-charcoal/10 rounded-md px-4 py-3 text-sm focus:outline-none focus:border-gold transition-colors"
+          />
+        </div>
+      </div>
+      <div>
+        <label for="message" class="block text-sm text-charcoal/60 mb-1">{t(lang, 'contact.message')}</label>
+        <textarea
+          id="message"
+          name="message"
+          required
+          rows="5"
+          placeholder={t(lang, 'contact.message_placeholder')}
+          class="w-full bg-ivory border border-charcoal/10 rounded-md px-4 py-3 text-sm focus:outline-none focus:border-gold transition-colors resize-none"
+        ></textarea>
+      </div>
+      <div class="text-center">
+        <button
+          type="submit"
+          class="bg-gold text-navy px-10 py-3 rounded-md font-semibold hover:bg-gold/90 transition-colors"
+        >
+          {t(lang, 'contact.send')}
+        </button>
+      </div>
+    </form>
+
+    <!-- Direct links -->
+    <div class="flex justify-center gap-6 mt-8 text-sm text-charcoal/50">
+      <a href="mailto:info@kcsa.org.ua" class="hover:text-navy transition-colors">info@kcsa.org.ua</a>
+      <a href="#" class="hover:text-navy transition-colors">LinkedIn</a>
+      <a href="#" class="hover:text-navy transition-colors">WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<script>
+  const form = document.getElementById('contact-form') as HTMLFormElement;
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const data = new FormData(form);
+    const name = data.get('name');
+    const email = data.get('email');
+    const message = data.get('message');
+    const subject = encodeURIComponent('KCSA Contact Form');
+    const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`);
+    window.location.href = `mailto:info@kcsa.org.ua?subject=${subject}&body=${body}`;
+  });
+</script>
