@@ -1,0 +1,81 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import MobileMenu from '../../components/MobileMenu.astro';
+import Footer from '../../components/Footer.astro';
+import SectionHeader from '../../components/SectionHeader.astro';
+import { t } from '../../i18n/translations';
+import { getCollection } from 'astro:content';
+
+const lang = 'ua' as const;
+const leadership = (await getCollection('leadership')).sort((a, b) => a.data.order - b.data.order);
+const council = await getCollection('council');
+const experts = await getCollection('experts');
+---
+
+<BaseLayout title={`${t(lang, 'structure.title')} — KCSA`} lang={lang}>
+  <Header lang={lang} currentPath="/ua/structure" />
+  <MobileMenu lang={lang} />
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+    <!-- Leadership -->
+    <section class="mb-16">
+      <SectionHeader label="KCSA" title={t(lang, 'structure.leadership')} />
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+        {leadership.map((person) => (
+          <div class="bg-white rounded-lg p-6 border border-charcoal/10">
+            <div class="w-16 h-16 rounded-full bg-ivory flex items-center justify-center text-2xl text-navy mb-4">
+              👤
+            </div>
+            <h3 class="font-heading font-semibold text-navy">{person.data.name_ua}</h3>
+            <p class="text-sm text-gold mt-1">{person.data.title_ua}</p>
+            <p class="text-sm text-charcoal/60 mt-3 leading-relaxed">{person.data.bio_ua}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Council Members -->
+    <section class="mb-16">
+      <SectionHeader label="KCSA" title={t(lang, 'structure.council')} />
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
+        {council.map((member) => (
+          <div class="bg-white rounded-lg p-4 border border-charcoal/10 flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-ivory flex items-center justify-center text-sm text-navy">👤</div>
+            <div>
+              <div class="text-sm font-semibold text-navy">{member.data.name}</div>
+              <div class="text-xs text-charcoal/50">{member.data.affiliation_ua}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Expert List -->
+    <section id="experts">
+      <SectionHeader label="KCSA" title={t(lang, 'structure.experts')} />
+      <div class="mt-8 overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-charcoal/10 text-left">
+              <th class="py-3 pr-4 font-mono text-xs uppercase tracking-wider text-gold">Ім'я</th>
+              <th class="py-3 pr-4 font-mono text-xs uppercase tracking-wider text-gold">Організація</th>
+              <th class="py-3 font-mono text-xs uppercase tracking-wider text-gold">Країна</th>
+            </tr>
+          </thead>
+          <tbody>
+            {experts.map((expert) => (
+              <tr class="border-b border-charcoal/5">
+                <td class="py-3 pr-4 font-medium text-navy">{expert.data.name}</td>
+                <td class="py-3 pr-4 text-charcoal/60">{expert.data.affiliation_ua}</td>
+                <td class="py-3 text-charcoal/60">{expert.data.country_ua}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <Footer lang={lang} />
+</BaseLayout>
