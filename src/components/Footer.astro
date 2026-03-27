@@ -1,11 +1,19 @@
 ---
 import { t, localePath, type Lang } from '../i18n/translations';
+import { getCollection } from 'astro:content';
 
 interface Props {
   lang: Lang;
 }
 
 const { lang } = Astro.props;
+const settingsEntries = await getCollection('settings');
+const settingsEntry = settingsEntries[0];
+const settings = settingsEntry?.data ?? {};
+const email = settings.email || 'info@kcsa.org.ua';
+const linkedin = settings.linkedin || '';
+const whatsapp = settings.whatsapp || '';
+const phone = settings.phone || '';
 ---
 
 <footer class="bg-charcoal text-white">
@@ -13,14 +21,7 @@ const { lang } = Astro.props;
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
       <!-- Brand -->
       <div>
-        <div class="flex items-center gap-3 mb-3">
-          <img src="/logo-nobg.png" alt="KCSA" class="h-10 w-10 object-contain opacity-80" />
-          <span class="font-heading font-bold text-xl tracking-wide">KCSA</span>
-        </div>
-        <p class="text-white/50 text-sm leading-relaxed">
-          Kyiv Council on Strategic Affairs<br />
-          Київська Рада зі Стратегічних Питань
-        </p>
+        <img src="/logo-text.png" alt="KCSA" class="h-12 mix-blend-screen mb-3" />
       </div>
 
       <!-- Navigation -->
@@ -48,9 +49,10 @@ const { lang } = Astro.props;
       <div>
         <h3 class="font-mono text-[0.7rem] uppercase tracking-widest text-gold mb-4">{t(lang, 'footer.contacts')}</h3>
         <div class="space-y-2 text-sm text-white/60">
-          <a href="mailto:info@kcsa.org.ua" class="block hover:text-white transition-colors">info@kcsa.org.ua</a>
-          <a href="#" class="block hover:text-white transition-colors">LinkedIn</a>
-          <a href="#" class="block hover:text-white transition-colors">WhatsApp</a>
+          <a href={`mailto:${email}`} class="block hover:text-white transition-colors">{email}</a>
+          {phone && <a href={`tel:${phone}`} class="block hover:text-white transition-colors">{phone}</a>}
+          {linkedin && <a href={linkedin} target="_blank" rel="noopener" class="block hover:text-white transition-colors">LinkedIn</a>}
+          {whatsapp && <a href={`https://wa.me/${whatsapp.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener" class="block hover:text-white transition-colors">WhatsApp</a>}
         </div>
       </div>
     </div>

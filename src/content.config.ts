@@ -92,6 +92,16 @@ const alerts = defineCollection({
   }),
 });
 
+const settings = defineCollection({
+  loader: glob({ pattern: '**/*.yaml', base: './src/content/settings' }),
+  schema: z.object({
+    email: z.string().optional(),
+    linkedin: z.string().optional(),
+    whatsapp: z.string().optional(),
+    phone: z.string().optional(),
+  }),
+});
+
 export const collections = {
   committees,
   leadership,
@@ -101,4 +111,5 @@ export const collections = {
   publications,
   news,
   alerts,
+  settings,
 };

@@ -14,6 +14,21 @@ locale: "uk"
 
 collections:
   # ==================
+  # SETTINGS
+  # ==================
+  - name: "settings"
+    label: "Settings / Налаштування"
+    files:
+      - name: "contacts"
+        label: "Contacts / Контакти"
+        file: "src/content/settings/contacts.yaml"
+        fields:
+          - { label: "Email", name: "email", widget: "string" }
+          - { label: "LinkedIn URL", name: "linkedin", widget: "string", required: false, hint: "Full URL, e.g. https://linkedin.com/company/kcsa" }
+          - { label: "WhatsApp number", name: "whatsapp", widget: "string", required: false, hint: "With country code, e.g. +380501234567" }
+          - { label: "Phone number", name: "phone", widget: "string", required: false, hint: "With country code, e.g. +380501234567" }
+
+  # ==================
   # COMMITTEES (YAML)
   # ==================
   - name: "committees"
