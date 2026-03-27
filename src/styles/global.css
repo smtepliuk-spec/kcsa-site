@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+@theme {
+  --color-navy: #1A365D;
+  --color-navy-dark: #0F2341;
+  --color-gold: #C9A84C;
+  --color-ivory: #F7F5F0;
+  --color-steel: #2D4A7A;
+  --color-charcoal: #1A1A1A;
+
+  --font-heading: 'Cinzel', serif;
+  --font-body: 'Raleway', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-charcoal);
+  background: var(--color-ivory);
+}
