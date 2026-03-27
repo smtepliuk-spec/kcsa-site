@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Header from '../../../components/Header.astro';
+import MobileMenu from '../../../components/MobileMenu.astro';
+import Footer from '../../../components/Footer.astro';
+import SectionHeader from '../../../components/SectionHeader.astro';
+import { t, localePath } from '../../../i18n/translations';
+import { getCollection } from 'astro:content';
+
+const lang = 'en' as const;
+const committees = (await getCollection('committees')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout title={`${t(lang, 'nav.committees')} — KCSA`} lang={lang}>
+  <Header lang={lang} currentPath="/en/committees" />
+  <MobileMenu lang={lang} />
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+    <SectionHeader label="KCSA" title={t(lang, 'committees.title')} />
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-10">
+      {committees.map((c) => (
+        <a href={localePath(lang, `/committees/${c.id}`)} class="bg-white rounded-lg p-6 border border-charcoal/10 hover:shadow-md hover:border-gold/30 transition-all group">
+          <div class="text-4xl mb-4">{c.data.icon}</div>
+          <h3 class="font-heading text-lg font-semibold text-navy group-hover:text-steel transition-colors">{c.data.name_en}</h3>
+          <p class="text-sm text-charcoal/60 mt-2 leading-relaxed">{c.data.description_en}</p>
+        </a>
+      ))}
+    </div>
+  </main>
+
+  <Footer lang={lang} />
+</BaseLayout>

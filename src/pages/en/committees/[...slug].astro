@@ -1,0 +1,59 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Header from '../../../components/Header.astro';
+import MobileMenu from '../../../components/MobileMenu.astro';
+import Footer from '../../../components/Footer.astro';
+import { t, localePath } from '../../../i18n/translations';
+import { getCollection } from 'astro:content';
+
+const lang = 'en' as const;
+
+export async function getStaticPaths() {
+  const committees = await getCollection('committees');
+  return committees.map((c) => ({ params: { slug: c.id } }));
+}
+
+const { slug } = Astro.params;
+const committees = await getCollection('committees');
+const committee = committees.find((c) => c.id === slug);
+if (!committee) return Astro.redirect('/en/committees');
+
+const publications = (await getCollection('publications'))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 3);
+---
+
+<BaseLayout title={`${committee.data.name_en} — KCSA`} lang={lang}>
+  <Header lang={lang} currentPath={`/en/committees/${slug}`} />
+  <MobileMenu lang={lang} />
+
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+    <a href={localePath(lang, '/committees')} class="text-sm text-steel hover:text-navy transition-colors">
+      ← {t(lang, 'nav.committees')}
+    </a>
+
+    <div class="mt-6">
+      <div class="text-4xl mb-4">{committee.data.icon}</div>
+      <h1 class="font-heading text-3xl font-bold text-navy">{committee.data.name_en}</h1>
+      <p class="text-charcoal/60 mt-4 leading-relaxed text-lg">{committee.data.description_en}</p>
+    </div>
+
+    {publications.length > 0 && (
+      <section class="mt-12">
+        <h2 class="font-heading text-xl font-bold text-navy mb-4">{t(lang, 'publications.title')}</h2>
+        <div class="space-y-3">
+          {publications.map((pub) => (
+            <div class="bg-white rounded-lg p-4 border border-charcoal/10">
+              <h3 class="text-sm font-semibold text-navy">{pub.data.title_en}</h3>
+              <p class="text-xs text-charcoal/50 mt-1">
+                {pub.data.date.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })} · {pub.data.author}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+    )}
+  </main>
+
+  <Footer lang={lang} />
+</BaseLayout>
