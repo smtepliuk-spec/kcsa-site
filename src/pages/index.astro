@@ -1,3 +1,30 @@
 ---
-return Astro.redirect('/ua/');
+import '../styles/global.css';
 ---
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>KCSA</title>
+  <script is:inline src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <script is:inline>
+    // Preserve invite/confirmation tokens for Netlify Identity
+    if (window.location.hash && (window.location.hash.includes('invite_token') || window.location.hash.includes('confirmation_token') || window.location.hash.includes('recovery_token'))) {
+      // Let Netlify Identity widget handle the token
+    } else {
+      window.location.href = '/ua/';
+    }
+  </script>
+</head>
+<body>
+  <p style="text-align:center;padding:40px;">Loading...</p>
+  <script is:inline>
+    if (window.netlifyIdentity) {
+      window.netlifyIdentity.on("login", () => {
+        document.location.href = "/admin/";
+      });
+    }
+  </script>
+</body>
+</html>
