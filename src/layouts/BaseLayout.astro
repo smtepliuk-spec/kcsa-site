@@ -29,8 +29,20 @@ const { title, description = 'Kyiv Council on Strategic Affairs', lang } = Astro
   <meta property="og:image" content="/logo.jpg" />
   <meta property="og:type" content="website" />
   <title>{title}</title>
+  <script is:inline src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body class="bg-ivory text-charcoal font-body antialiased">
   <slot />
+  <script is:inline>
+    if (window.netlifyIdentity) {
+      window.netlifyIdentity.on("init", user => {
+        if (!user) {
+          window.netlifyIdentity.on("login", () => {
+            document.location.href = "/admin/";
+          });
+        }
+      });
+    }
+  </script>
 </body>
 </html>
